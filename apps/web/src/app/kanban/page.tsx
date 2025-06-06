@@ -36,6 +36,8 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { useGetClients } from "@/hooks/useQueries/useGetClients"
+import { useKanbanProjects } from "@/hooks/useQueries/useKanban"
+import { useMoveProject, useUpdateProject, useDeleteProject, useCreateTask, useUpdateTask, useDeleteTask } from "@/hooks/useMutations/useKanbanMutations"
 import Link from "next/link"
 
 // Mock data para projetos
