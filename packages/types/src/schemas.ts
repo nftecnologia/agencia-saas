@@ -7,6 +7,8 @@ export const clientSchema = z.object({
   company: z.string().optional(),
   address: z.string().optional(),
   notes: z.string().optional(),
+  contractValue: z.number().min(0).optional(),
+  tags: z.array(z.string()).optional(),
 })
 
 export const projectSchema = z.object({

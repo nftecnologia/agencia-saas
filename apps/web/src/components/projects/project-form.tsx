@@ -35,11 +35,21 @@ export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProp
       budget: initialData?.budget || 0,
       priority: initialData?.priority || "medium",
       currency: initialData?.currency || "BRL",
-      startDate: initialData?.startDate ? new Date(initialData.startDate).toISOString().split('T')[0] : "",
-      deadline: initialData?.deadline ? new Date(initialData.deadline).toISOString().split('T')[0] : "",
+      startDate: initialData?.startDate || undefined,
+      deadline: initialData?.deadline || undefined,
       assignedUsers: initialData?.assignedUsers || [],
     }
   })
+
+  const handleFormSubmit = (data: CreateProjectData) => {
+    // Converter strings de data para Date objects se necessário
+    const processedData = {
+      ...data,
+      startDate: data.startDate ? new Date(data.startDate) : undefined,
+      deadline: data.deadline ? new Date(data.deadline) : undefined,
+    }
+    onSubmit(processedData)
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -58,7 +68,7 @@ export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProp
           </Button>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
             {/* Nome */}
             <div>
               <Label htmlFor="name">Nome do Projeto *</Label>
@@ -149,7 +159,9 @@ export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProp
                 <Input
                   id="startDate"
                   type="date"
-                  {...register("startDate")}
+                  {...register("startDate", {
+                    setValueAs: (value) => value === "" ? undefined : value
+                  })}
                 />
                 {errors.startDate && (
                   <p className="text-sm text-red-500 mt-1">{errors.startDate.message}</p>
@@ -157,31 +169,20 @@ export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProp
               </div>
               
               <div>
-                <Label htmlFor="endDate">Data de Término</Label>
+                <Label htmlFor="deadline">Data de Término</Label>
                 <Input
-                  id="endDate"
+                  id="deadline"
                   type="date"
-                  {...register("endDate")}
+                  {...register("deadline", {
+                    setValueAs: (value) => value === "" ? undefined : value
+                  })}
                 />
-                {errors.endDate && (
-                  <p className="text-sm text-red-500 mt-1">{errors.endDate.message}</p>
+                {errors.deadline && (
+                  <p className="text-sm text-red-500 mt-1">{errors.deadline.message}</p>
                 )}
               </div>
             </div>
 
-            {/* Observações */}
-            <div>
-              <Label htmlFor="notes">Observações</Label>
-              <textarea
-                id="notes"
-                {...register("notes")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[80px]"
-                placeholder="Observações sobre o projeto..."
-              />
-              {errors.notes && (
-                <p className="text-sm text-red-500 mt-1">{errors.notes.message}</p>
-              )}
-            </div>
 
             {/* Botões */}
             <div className="flex gap-3 pt-4">

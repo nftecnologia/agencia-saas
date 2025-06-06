@@ -70,7 +70,7 @@ export default function DashboardPage() {
             value={stats?.totalClients || 0}
             icon={Users}
             description="Clientes ativos"
-            trend={stats?.totalClients > 0 ? "up" : "neutral"}
+            trend={(stats?.totalClients || 0) > 0 ? "up" : "neutral"}
           />
           
           <MetricCard
@@ -78,7 +78,7 @@ export default function DashboardPage() {
             value={stats?.activeProjects || 0}
             icon={Briefcase}
             description="Em andamento"
-            trend={stats?.activeProjects > 0 ? "up" : "neutral"}
+            trend={(stats?.activeProjects || 0) > 0 ? "up" : "neutral"}
           />
           
           <MetricCard
@@ -86,7 +86,7 @@ export default function DashboardPage() {
             value={`R$ ${(stats?.monthlyRevenue || 0).toLocaleString('pt-BR')}`}
             icon={DollarSign}
             description="Mês atual"
-            trend={stats?.growthRate > 0 ? "up" : stats?.growthRate < 0 ? "down" : "neutral"}
+            trend={(stats?.growthRate || 0) > 0 ? "up" : (stats?.growthRate || 0) < 0 ? "down" : "neutral"}
           />
           
           <MetricCard
@@ -94,7 +94,7 @@ export default function DashboardPage() {
             value={`${(stats?.growthRate || 0).toFixed(1)}%`}
             icon={TrendingUp}
             description="vs mês anterior"
-            trend={stats?.growthRate > 0 ? "up" : stats?.growthRate < 0 ? "down" : "neutral"}
+            trend={(stats?.growthRate || 0) > 0 ? "up" : (stats?.growthRate || 0) < 0 ? "down" : "neutral"}
           />
         </div>
 
@@ -115,7 +115,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {stats?.totalClients === 0 && stats?.activeProjects === 0 ? (
+                {(stats?.totalClients || 0) === 0 && (stats?.activeProjects || 0) === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <p className="mb-4">Nenhuma atividade ainda</p>
                     <div className="space-y-2">
@@ -143,24 +143,24 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     
-                    {stats?.totalClients > 0 && (
+                    {(stats?.totalClients || 0) > 0 && (
                       <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <div>
                           <p className="text-sm font-medium">
-                            {stats.totalClients} cliente(s) cadastrado(s)
+                            {stats?.totalClients || 0} cliente(s) cadastrado(s)
                           </p>
                           <p className="text-xs text-gray-600">Base de clientes ativa</p>
                         </div>
                       </div>
                     )}
                     
-                    {stats?.activeProjects > 0 && (
+                    {(stats?.activeProjects || 0) > 0 && (
                       <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
                         <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                         <div>
                           <p className="text-sm font-medium">
-                            {stats.activeProjects} projeto(s) ativo(s)
+                            {stats?.activeProjects || 0} projeto(s) ativo(s)
                           </p>
                           <p className="text-xs text-gray-600">Em desenvolvimento</p>
                         </div>

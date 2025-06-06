@@ -115,7 +115,7 @@ export async function updateClient(
       where: { id: clientId },
       data: {
         ...validatedData,
-        contractValue: validatedData.contractValue || null
+        contractValue: 'contractValue' in validatedData ? validatedData.contractValue || null : undefined
       }
     })
 
