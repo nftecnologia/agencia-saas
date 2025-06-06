@@ -31,7 +31,15 @@ export async function getProjects(): Promise<Project[]> {
       }
     })
 
-    return projects as Project[]
+    return projects.map((project: any) => ({
+      ...project,
+      status: project.status?.toLowerCase() as any,
+      priority: project.priority?.toLowerCase() as any,
+      budget: project.budget ? Number(project.budget) : undefined,
+      assignedUsers: project.assignedUsers as string[],
+      tags: project.tags as string[],
+      customFields: project.customFields as Record<string, any>
+    })) as Project[]
   } catch (error) {
     console.error("Erro ao buscar projetos:", error)
     throw new Error("Erro ao buscar projetos")
@@ -58,6 +66,8 @@ export async function createProject(data: CreateProjectData): Promise<ActionResp
       data: {
         ...validatedData,
         agencyId: session.user.agencyId,
+        status: validatedData.status?.toUpperCase() as any,
+        priority: validatedData.priority?.toUpperCase() as any,
         startDate: validatedData.startDate ? new Date(validatedData.startDate) : null,
         deadline: validatedData.deadline ? new Date(validatedData.deadline) : null,
       },
@@ -73,7 +83,15 @@ export async function createProject(data: CreateProjectData): Promise<ActionResp
 
     return {
       success: true,
-      data: project as Project
+      data: {
+        ...project,
+        status: project.status?.toLowerCase() as any,
+        priority: project.priority?.toLowerCase() as any,
+        budget: project.budget ? Number(project.budget) : undefined,
+        assignedUsers: project.assignedUsers as string[],
+        tags: project.tags as string[],
+        customFields: project.customFields as Record<string, any>
+      } as Project
     }
   } catch (error) {
     console.error("Erro ao criar projeto:", error)
@@ -118,12 +136,16 @@ export async function updateProject(id: string, data: UpdateProjectData): Promis
       }
     }
 
+    const { clientId, ...updateData } = data
+
     const updatedProject = await db.project.update({
       where: { id },
       data: {
-        ...data,
-        startDate: data.startDate ? new Date(data.startDate) : undefined,
-        deadline: data.deadline ? new Date(data.deadline) : undefined,
+        ...updateData,
+        status: updateData.status?.toUpperCase() as any,
+        priority: updateData.priority?.toUpperCase() as any,
+        startDate: updateData.startDate ? new Date(updateData.startDate) : undefined,
+        deadline: updateData.deadline ? new Date(updateData.deadline) : undefined,
       },
       include: {
         client: {
@@ -137,7 +159,15 @@ export async function updateProject(id: string, data: UpdateProjectData): Promis
 
     return {
       success: true,
-      data: updatedProject as Project
+      data: {
+        ...updatedProject,
+        status: updatedProject.status?.toLowerCase() as any,
+        priority: updatedProject.priority?.toLowerCase() as any,
+        budget: updatedProject.budget ? Number(updatedProject.budget) : undefined,
+        assignedUsers: updatedProject.assignedUsers as string[],
+        tags: updatedProject.tags as string[],
+        customFields: updatedProject.customFields as Record<string, any>
+      } as Project
     }
   } catch (error) {
     console.error("Erro ao atualizar projeto:", error)

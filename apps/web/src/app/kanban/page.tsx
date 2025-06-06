@@ -869,7 +869,7 @@ export default function KanbanPage() {
                               : project
                           )
                         )
-                        setSelectedProject(prev => ({
+                        setSelectedProject((prev: any) => ({
                           ...prev,
                           tasks: [...prev.tasks, newTask]
                         }))
@@ -897,7 +897,7 @@ export default function KanbanPage() {
                                   : project
                               )
                             )
-                            setSelectedProject(prev => ({
+                            setSelectedProject((prev: any) => ({
                               ...prev,
                               tasks: updatedTasks
                             }))
@@ -919,7 +919,7 @@ export default function KanbanPage() {
                                     : project
                                 )
                               )
-                              setSelectedProject(prev => ({
+                              setSelectedProject((prev: any) => ({
                                 ...prev,
                                 tasks: updatedTasks
                               }))
@@ -945,7 +945,7 @@ export default function KanbanPage() {
                                   : project
                               )
                             )
-                            setSelectedProject(prev => ({
+                            setSelectedProject((prev: any) => ({
                               ...prev,
                               tasks: updatedTasks
                             }))

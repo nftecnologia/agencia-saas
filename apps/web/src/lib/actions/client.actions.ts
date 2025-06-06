@@ -46,12 +46,14 @@ export async function createClient(data: CreateClientData): Promise<Client> {
     // Validar dados
     const validatedData = clientSchema.parse(data)
 
+    const { notes, tags, ...clientData } = validatedData
+
     const client = await db.client.create({
       data: {
-        ...validatedData,
+        ...clientData,
         agencyId: session.user.agencyId,
-        contractValue: validatedData.contractValue || null,
-        tags: validatedData.tags || [],
+        contractValue: clientData.contractValue || null,
+        tags: tags || [],
         customFields: {}
       }
     })
@@ -77,7 +79,9 @@ export async function createClient(data: CreateClientData): Promise<Client> {
       contractValue: client.contractValue ? Number(client.contractValue) : undefined,
       tags: client.tags as string[],
       address: client.address as any,
-      customFields: client.customFields as Record<string, any>
+      customFields: client.customFields as Record<string, any>,
+      status: client.status?.toLowerCase() as any,
+      contractType: client.contractType?.toLowerCase() as any
     } as Client
   } catch (error) {
     console.error("Erro ao criar cliente:", error)
@@ -111,10 +115,12 @@ export async function updateClient(
     // Validar dados
     const validatedData = clientSchema.partial().parse(data)
 
+    const { notes, tags, ...updateData } = validatedData
+
     const client = await db.client.update({
       where: { id: clientId },
       data: {
-        ...validatedData,
+        ...updateData,
         contractValue: 'contractValue' in validatedData ? validatedData.contractValue || null : undefined
       }
     })
@@ -124,7 +130,9 @@ export async function updateClient(
       contractValue: client.contractValue ? Number(client.contractValue) : undefined,
       tags: client.tags as string[],
       address: client.address as any,
-      customFields: client.customFields as Record<string, any>
+      customFields: client.customFields as Record<string, any>,
+      status: client.status?.toLowerCase() as any,
+      contractType: client.contractType?.toLowerCase() as any
     } as Client
   } catch (error) {
     console.error("Erro ao atualizar cliente:", error)
@@ -157,7 +165,7 @@ export async function deleteClient(clientId: string): Promise<void> {
       where: {
         clientId: clientId,
         status: {
-          in: ["planning", "in_progress", "review"]
+          in: ["PLANNING", "IN_PROGRESS", "REVIEW"]
         }
       }
     })
@@ -224,7 +232,9 @@ export async function getClientById(clientId: string): Promise<Client | null> {
       contractValue: client.contractValue ? Number(client.contractValue) : undefined,
       tags: client.tags as string[],
       address: client.address as any,
-      customFields: client.customFields as Record<string, any>
+      customFields: client.customFields as Record<string, any>,
+      status: client.status?.toLowerCase() as any,
+      contractType: client.contractType?.toLowerCase() as any
     } as Client
   } catch (error) {
     console.error("Erro ao buscar cliente:", error)

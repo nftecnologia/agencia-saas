@@ -24,7 +24,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       where: {
         agencyId: session.user.agencyId,
         status: {
-          in: ["planning", "in_progress", "review"]
+          in: ["PLANNING", "IN_PROGRESS", "REVIEW"]
         }
       }
     })
@@ -37,7 +37,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const monthlyRevenueResult = await db.revenue.aggregate({
       where: {
         agencyId: session.user.agencyId,
-        date: {
+        dueDate: {
           gte: firstDayOfMonth,
           lte: lastDayOfMonth
         }
@@ -54,7 +54,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const lastMonthRevenueResult = await db.revenue.aggregate({
       where: {
         agencyId: session.user.agencyId,
-        date: {
+        dueDate: {
           gte: firstDayOfLastMonth,
           lte: lastDayOfLastMonth
         }
@@ -79,10 +79,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     const sixMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1)
     
     const monthlyData = await db.revenue.groupBy({
-      by: ['date'],
+      by: ['dueDate'],
       where: {
         agencyId: session.user.agencyId,
-        date: {
+        dueDate: {
           gte: sixMonthsAgo
         }
       },
@@ -90,12 +90,12 @@ export async function getDashboardStats(): Promise<DashboardStats> {
         amount: true
       },
       orderBy: {
-        date: 'asc'
+        dueDate: 'asc'
       }
     })
 
     const revenueChartData = monthlyData.map((item: any) => ({
-      month: item.date.toLocaleDateString('pt-BR', { month: 'short' }),
+      month: item.dueDate.toLocaleDateString('pt-BR', { month: 'short' }),
       revenue: Number(item._sum.amount || 0)
     }))
 
