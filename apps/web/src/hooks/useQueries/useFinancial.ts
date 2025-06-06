@@ -5,6 +5,10 @@ export function useFinancialStats() {
   return useQuery({
     queryKey: ["financial-stats"],
     queryFn: () => getFinancialStats(),
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos no cache
+    retry: 1,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -28,6 +32,10 @@ export function useTransactions() {
         new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()
       )
     },
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos no cache
+    retry: 1,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -35,6 +43,10 @@ export function useRevenues() {
   return useQuery({
     queryKey: ["revenues"],
     queryFn: () => getRevenues(),
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos no cache
+    retry: 1,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -42,5 +54,9 @@ export function useExpenses() {
   return useQuery({
     queryKey: ["expenses"],
     queryFn: () => getExpenses(),
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    gcTime: 1000 * 60 * 10, // 10 minutos no cache
+    retry: 1,
+    refetchOnWindowFocus: false,
   })
 }
