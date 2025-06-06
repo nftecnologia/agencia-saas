@@ -74,7 +74,11 @@ export const authConfig: NextAuthConfig = {
   ],
   callbacks: {
     async jwt({ token, user }) {
+      console.log("🔗 JWT Callback - User:", user ? "Presente" : "Null")
+      console.log("🔗 JWT Callback - Token ID:", token.id)
+      
       if (user) {
+        console.log("✅ Adicionando dados do usuário ao token")
         token.id = user.id
         token.role = user.role
         token.agencyId = user.agencyId
@@ -83,13 +87,25 @@ export const authConfig: NextAuthConfig = {
       return token
     },
     async session({ session, token }) {
+      console.log("👤 Session Callback - Token ID:", token.id)
+      console.log("👤 Session Callback - Session User:", session.user ? "Presente" : "Null")
+      
       if (session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
         session.user.agencyId = token.agencyId as string
         session.user.agencyName = token.agencyName as string
+        console.log("✅ Sessão configurada para:", session.user.email)
       }
       return session
+    },
+    async redirect({ url, baseUrl }) {
+      console.log("🔄 Redirect Callback - URL:", url, "Base:", baseUrl)
+      // Permite redirecionamentos para qualquer URL no mesmo domínio
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Permite redirecionamento para o mesmo domínio
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
   },
   session: {

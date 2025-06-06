@@ -8,6 +8,8 @@ import {
   Users,
   FolderOpen,
   DollarSign,
+  Brain,
+  Kanban,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -29,9 +31,19 @@ const menuItems = [
     icon: FolderOpen,
   },
   {
+    title: "Kanban",
+    href: "/kanban",
+    icon: Kanban,
+  },
+  {
     title: "Financeiro",
     href: "/financeiro",
     icon: DollarSign,
+  },
+  {
+    title: "IA Central",
+    href: "/ia",
+    icon: Brain,
   },
   {
     title: "Configurações",
