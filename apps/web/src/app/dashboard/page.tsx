@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import LogoutButton from "@/components/logout-button"
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -11,9 +12,12 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Bem-vindo ao AgênciaOS</p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600">Bem-vindo ao AgênciaOS</p>
+          </div>
+          <LogoutButton />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

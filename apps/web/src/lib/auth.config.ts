@@ -2,7 +2,7 @@ import type { NextAuthConfig } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
-import { PrismaClient } from "@agenciasaas/database"
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -24,30 +24,50 @@ export const authConfig: NextAuthConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        console.log("🔐 Tentativa de login:", credentials?.email)
+        
         const parsed = loginSchema.safeParse(credentials)
         
-        if (!parsed.success) return null
+        if (!parsed.success) {
+          console.log("❌ Validação falhou:", parsed.error)
+          return null
+        }
         
         const { email, password } = parsed.data
         
-        const user = await prisma.user.findUnique({
-          where: { email },
-          include: { agency: true }
-        })
-        
-        if (!user || !user.isActive) return null
-        
-        const passwordMatch = await bcrypt.compare(password, user.password)
-        
-        if (!passwordMatch) return null
-        
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          agencyId: user.agencyId,
-          agencyName: user.agency.name,
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email },
+            include: { agency: true }
+          })
+          
+          console.log("👤 Usuário encontrado:", user ? "Sim" : "Não")
+          
+          if (!user || !user.isActive) {
+            console.log("❌ Usuário não encontrado ou inativo")
+            return null
+          }
+          
+          const passwordMatch = await bcrypt.compare(password, user.password)
+          console.log("🔑 Senha correta:", passwordMatch ? "Sim" : "Não")
+          
+          if (!passwordMatch) {
+            console.log("❌ Senha incorreta")
+            return null
+          }
+          
+          console.log("✅ Login bem-sucedido para:", user.email)
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            agencyId: user.agencyId,
+            agencyName: user.agency.name,
+          }
+        } catch (error) {
+          console.error("💥 Erro no authorize:", error)
+          return null
         }
       }
     })
