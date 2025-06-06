@@ -581,13 +581,10 @@ export default function KanbanPage() {
 
   const handleSaveEdit = () => {
     if (selectedProject) {
-      setProjects(prev => 
-        prev.map(project => 
-          project.id === selectedProject.id 
-            ? { ...project, ...editForm }
-            : project
-        )
-      )
+      updateProjectMutation.mutate({
+        projectId: selectedProject.id,
+        ...editForm
+      })
       setEditModalOpen(false)
       setSelectedProject(null)
       setEditForm({})
@@ -618,7 +615,7 @@ export default function KanbanPage() {
       ]
     }
 
-    setProjects(prev => [...prev, newProject])
+    // TODO: Implementar criação real de projeto
     setNewProjectModalOpen(false)
     
     // Reset form
@@ -723,7 +720,7 @@ export default function KanbanPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {kanbanColumns.map((column) => {
             const columnProjects = getProjectsByStatus(column.id)
-            const totalBudget = columnProjects.reduce((sum, project) => sum + project.budget, 0)
+            const totalBudget = columnProjects.reduce((sum, project) => sum + (project.budget || 0), 0)
             
             return (
               <Card key={column.id}>
@@ -869,13 +866,7 @@ export default function KanbanPage() {
                           completed: false,
                           assignee: "Usuário Atual"
                         }
-                        setProjects(prev => 
-                          prev.map(project => 
-                            project.id === selectedProject.id 
-                              ? { ...project, tasks: [...project.tasks, newTask] }
-                              : project
-                          )
-                        )
+                        // TODO: Implementar atualização real de tasks
                         setSelectedProject((prev: any) => ({
                           ...prev,
                           tasks: [...prev.tasks, newTask]
@@ -897,13 +888,7 @@ export default function KanbanPage() {
                             const updatedTasks = selectedProject.tasks.map((t: any) =>
                               t.id === task.id ? { ...t, completed: e.target.checked } : t
                             )
-                            setProjects(prev => 
-                              prev.map(project => 
-                                project.id === selectedProject.id 
-                                  ? { ...project, tasks: updatedTasks }
-                                  : project
-                              )
-                            )
+                            // TODO: Implementar atualização de tasks no banco
                             setSelectedProject((prev: any) => ({
                               ...prev,
                               tasks: updatedTasks
@@ -919,13 +904,7 @@ export default function KanbanPage() {
                               const updatedTasks = selectedProject.tasks.map((t: any) =>
                                 t.id === task.id ? { ...t, title: e.target.value } : t
                               )
-                              setProjects(prev => 
-                                prev.map(project => 
-                                  project.id === selectedProject.id 
-                                    ? { ...project, tasks: updatedTasks }
-                                    : project
-                                )
-                              )
+                              // TODO: Implementar atualização real de tasks
                               setSelectedProject((prev: any) => ({
                                 ...prev,
                                 tasks: updatedTasks
@@ -945,13 +924,7 @@ export default function KanbanPage() {
                           className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
                           onClick={() => {
                             const updatedTasks = selectedProject.tasks.filter((t: any) => t.id !== task.id)
-                            setProjects(prev => 
-                              prev.map(project => 
-                                project.id === selectedProject.id 
-                                  ? { ...project, tasks: updatedTasks }
-                                  : project
-                              )
-                            )
+                            // TODO: Implementar exclusão de tasks no banco
                             setSelectedProject((prev: any) => ({
                               ...prev,
                               tasks: updatedTasks

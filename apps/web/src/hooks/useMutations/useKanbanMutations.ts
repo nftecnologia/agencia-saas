@@ -5,16 +5,13 @@ export function useMoveProject() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async ({ projectId, newStatus }: { projectId: string, newStatus: "PLANNING" | "IN_PROGRESS" | "REVIEW" | "COMPLETED" }) => {
-      const result = await moveProject({ projectId, newStatus })
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: moveProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao mover projeto:", error)
+    }
   })
 }
 
@@ -22,23 +19,14 @@ export function useUpdateProject() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async (data: { 
-      projectId: string, 
-      name?: string, 
-      description?: string, 
-      budget?: number, 
-      priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT", 
-      deadline?: string 
-    }) => {
-      const result = await updateProject(data)
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: updateProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
+      queryClient.invalidateQueries({ queryKey: ["projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao atualizar projeto:", error)
+    }
   })
 }
 
@@ -46,16 +34,14 @@ export function useDeleteProject() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async ({ projectId }: { projectId: string }) => {
-      const result = await deleteProject({ projectId })
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: deleteProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
+      queryClient.invalidateQueries({ queryKey: ["projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao excluir projeto:", error)
+    }
   })
 }
 
@@ -63,23 +49,13 @@ export function useCreateTask() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async (data: {
-      projectId: string,
-      title: string,
-      description?: string,
-      assignedTo?: string,
-      priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT",
-      dueDate?: string
-    }) => {
-      const result = await createTask(data)
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao criar task:", error)
+    }
   })
 }
 
@@ -87,21 +63,13 @@ export function useUpdateTask() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async (data: {
-      taskId: string,
-      title?: string,
-      completed?: boolean,
-      status?: "TODO" | "IN_PROGRESS" | "REVIEW" | "DONE"
-    }) => {
-      const result = await updateTask(data)
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: updateTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao atualizar task:", error)
+    }
   })
 }
 
@@ -109,15 +77,12 @@ export function useDeleteTask() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: async ({ taskId }: { taskId: string }) => {
-      const result = await deleteTask({ taskId })
-      if (result?.data && 'success' in result.data && !result.data.success) {
-        throw new Error(result.data.error.message)
-      }
-      return result
-    },
+    mutationFn: deleteTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kanban-projects"] })
     },
+    onError: (error) => {
+      console.error("Erro ao excluir task:", error)
+    }
   })
 }
