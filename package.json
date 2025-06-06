@@ -1,0 +1,36 @@
+{
+  "name": "agenciasaas",
+  "version": "1.0.0",
+  "description": "SaaS completo para agências de marketing digital",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "web": "npm run dev --workspace=@agenciasaas/web",
+    "api": "npm run dev --workspace=@agenciasaas/api",
+    "db:generate": "npm run generate --workspace=@agenciasaas/database",
+    "db:push": "npm run push --workspace=@agenciasaas/database",
+    "db:migrate": "npm run migrate --workspace=@agenciasaas/database",
+    "db:seed": "npm run seed --workspace=@agenciasaas/database"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.12.4",
+    "turbo": "^1.12.4",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "packageManager": "npm@10.0.0"
+}

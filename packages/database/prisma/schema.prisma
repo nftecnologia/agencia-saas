@@ -1,0 +1,607 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+// CORE MODELS
+// ========================================
+
+model Agency {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic info
+  name     String
+  slug     String  @unique
+  ownerId  String
+  plan     Plan    @default(FREE)
+  status   AgencyStatus @default(ACTIVE)
+
+  // Settings (JSON)
+  settings Json @default("{}")
+
+  // Billing info (JSON)
+  billing Json?
+
+  // Usage stats (JSON)  
+  usage Json @default("{}")
+
+  // Relations
+  users            User[]
+  clients          Client[]
+  projects         Project[]
+  boards           Board[]
+  tasks            Task[]
+  revenues         Revenue[]
+  expenses         Expense[]
+  expenseCategories ExpenseCategory[]
+  aiGenerations    AIGeneration[]
+  aiTemplates      AITemplate[]
+  feedStoryGenerations FeedStoryGeneration[]
+  invites          AgencyInvite[]
+  clientContracts  ClientContract[]
+  clientNotes      ClientNote[]
+  taskComments     TaskComment[]
+  taskAttachments  TaskAttachment[]
+
+  @@map("agencies")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic info
+  agencyId String
+  name     String
+  email    String @unique
+  password String
+  role     UserRole @default(MEMBER)
+  avatar   String?
+  isActive Boolean @default(true)
+  lastLoginAt DateTime?
+
+  // Permissions (JSON array)
+  permissions Json @default("[]")
+
+  // Relations
+  agency            Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  assignedTasks     Task[] @relation("TaskAssignee")
+  taskComments      TaskComment[]
+  taskAttachments   TaskAttachment[]
+  aiGenerations     AIGeneration[]
+  feedStoryGenerations FeedStoryGeneration[]
+  clientNotes       ClientNote[]
+  invitesSent       AgencyInvite[] @relation("InvitedBy")
+
+  @@map("users")
+}
+
+model AgencyInvite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId   String
+  email      String
+  role       UserRole @default(MEMBER)
+  invitedBy  String
+  acceptedAt DateTime?
+  expiresAt  DateTime
+  token      String   @unique
+
+  // Relations
+  agency    Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  inviter   User   @relation("InvitedBy", fields: [invitedBy], references: [id])
+
+  @@map("agency_invites")
+}
+
+// ========================================
+// CLIENT MODELS
+// ========================================
+
+model Client {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic info
+  agencyId      String
+  name          String
+  email         String?
+  phone         String?
+  company       String?
+  industry      String?
+  website       String?
+  contactPerson String?
+  status        ClientStatus @default(PROSPECT)
+  contractType  ContractType @default(PROJECT)
+  contractValue Decimal?
+  notesText     String?
+
+  // Address (JSON)
+  address Json?
+
+  // Custom fields (JSON)
+  customFields Json @default("{}")
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Relations
+  agency        Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  projects      Project[]
+  contacts      ClientContact[]
+  contracts     ClientContract[]
+  notes         ClientNote[]
+  revenues      Revenue[]
+  aiGenerations AIGeneration[]
+  feedStoryGenerations FeedStoryGeneration[]
+
+  @@map("clients")
+}
+
+model ClientContact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId  String
+  name      String
+  email     String?
+  phone     String?
+  role      String?
+  isPrimary Boolean @default(false)
+
+  // Relations
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("client_contacts")
+}
+
+model ClientContract {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId     String
+  agencyId     String
+  title        String
+  description  String?
+  value        Decimal
+  currency     String  @default("BRL")
+  type         ContractType
+  startDate    DateTime
+  endDate      DateTime?
+  status       ContractStatus @default(DRAFT)
+  paymentTerms String?
+
+  // Deliverables (JSON array)
+  deliverables Json @default("[]")
+
+  // Relations
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  @@map("client_contracts")
+}
+
+model ClientNote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId  String
+  agencyId  String
+  userId    String
+  content   String
+  isPrivate Boolean @default(false)
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Relations
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("client_notes")
+}
+
+// ========================================
+// PROJECT MODELS
+// ========================================
+
+model Project {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Basic info
+  agencyId    String
+  clientId    String
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  priority    Priority      @default(MEDIUM)
+  budget      Decimal?
+  currency    String        @default("BRL")
+  startDate   DateTime?
+  deadline    DateTime?
+  completedAt DateTime?
+
+  // Assigned users (JSON array)
+  assignedUsers Json @default("[]")
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Custom fields (JSON)
+  customFields Json @default("{}")
+
+  // Relations
+  agency        Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  client        Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  boards        Board[]
+  tasks         Task[]
+  revenues      Revenue[]
+  aiGenerations AIGeneration[]
+  feedStoryGenerations FeedStoryGeneration[]
+
+  @@map("projects")
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId   String
+  agencyId    String
+  name        String
+  description String?
+  position    Int
+  color       String?
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  agency  Agency  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  tasks   Task[]
+
+  @@map("boards")
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId       String
+  boardId         String
+  agencyId        String
+  title           String
+  description     String?
+  status          TaskStatus @default(TODO)
+  priority        Priority   @default(MEDIUM)
+  assignedTo      String?
+  dueDate         DateTime?
+  completedAt     DateTime?
+  position        Int
+  estimatedHours  Decimal?
+  actualHours     Decimal?
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Relations
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  board       Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  agency      Agency  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  assignee    User?   @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  comments    TaskComment[]
+  attachments TaskAttachment[]
+
+  @@map("tasks")
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId     String
+  agencyId   String
+  userId     String
+  content    String
+  isInternal Boolean @default(false)
+
+  // Relations
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("task_comments")
+}
+
+model TaskAttachment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId   String
+  agencyId String
+  userId   String
+  fileName String
+  fileUrl  String
+  fileSize Int
+  mimeType String
+
+  // Relations
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("task_attachments")
+}
+
+// ========================================
+// FINANCIAL MODELS
+// ========================================
+
+model Revenue {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId       String
+  clientId       String
+  projectId      String?
+  title          String
+  description    String?
+  amount         Decimal
+  currency       String @default("BRL")
+  type           RevenueType @default(ONE_TIME)
+  status         RevenueStatus @default(PENDING)
+  dueDate        DateTime
+  receivedDate   DateTime?
+  invoiceNumber  String?
+  paymentMethod  String?
+  category       String?
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Relations
+  agency  Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  client  Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id])
+
+  @@map("revenues")
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId      String
+  title         String
+  description   String?
+  amount        Decimal
+  currency      String @default("BRL")
+  category      String
+  subcategory   String?
+  supplier      String?
+  date          DateTime
+  paymentMethod String?
+  receipt       String?
+  isRecurring   Boolean @default(false)
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Relations
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  @@map("expenses")
+}
+
+model ExpenseCategory {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId    String
+  name        String
+  description String?
+  color       String?
+  isDefault   Boolean @default(false)
+
+  // Subcategories (JSON array)
+  subcategories Json @default("[]")
+
+  // Relations
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  @@map("expense_categories")
+}
+
+// ========================================
+// AI MODELS
+// ========================================
+
+model AIGeneration {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId   String
+  clientId   String
+  projectId  String?
+  userId     String
+  agentId    String
+  title      String
+  prompt     String
+  response   String
+  imageUrl   String?
+  isFavorite Boolean @default(false)
+  usedAt     DateTime?
+
+  // Metadata (JSON)
+  metadata Json @default("{}")
+
+  // Tags (JSON array)
+  tags Json @default("[]")
+
+  // Performance (JSON)
+  performance Json?
+
+  // Relations
+  agency  Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  client  Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+
+  @@map("ai_generations")
+}
+
+model AITemplate {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId       String
+  agentId        String
+  name           String
+  description    String?
+  promptTemplate String
+  isPublic       Boolean @default(false)
+  usageCount     Int     @default(0)
+
+  // Default values (JSON)
+  defaultValues Json @default("{}")
+
+  // Relations
+  agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  @@map("ai_templates")
+}
+
+model FeedStoryGeneration {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agencyId   String
+  clientId   String
+  projectId  String?
+  userId     String
+  status     FeedStoryStatus @default(PROCESSING)
+  isFavorite Boolean         @default(false)
+
+  // Briefing (JSON)
+  briefing Json
+
+  // Result (JSON)
+  result Json?
+
+  // Relations
+  agency  Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  client  Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+
+  @@map("feed_story_generations")
+}
+
+// ========================================
+// ENUMS
+// ========================================
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum AgencyStatus {
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  PROSPECT
+}
+
+enum ContractType {
+  MONTHLY
+  PROJECT
+  HOURLY
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RevenueType {
+  RECURRING
+  ONE_TIME
+}
+
+enum RevenueStatus {
+  PENDING
+  RECEIVED
+  OVERDUE
+  CANCELLED
+}
+
+enum FeedStoryStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
