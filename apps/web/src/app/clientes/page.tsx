@@ -5,6 +5,8 @@ import { MainLayout } from "@/components/layout/main-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Avatar } from "@/components/ui/avatar"
 import { Plus, Search, MoreHorizontal, Edit, Trash2, Phone, Mail, Globe } from "lucide-react"
 import { useGetClients } from "@/hooks/useQueries/useGetClients"
 import { useCreateClient } from "@/hooks/useMutations/useCreateClient"
@@ -31,22 +33,33 @@ function ClientCard({ client }: { client: Client }) {
   }
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card variant="elevated" hover>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-lg font-semibold">{client.name}</CardTitle>
-            {client.company && (
-              <p className="text-sm text-gray-600 mt-1">{client.company}</p>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(client.status)}`}>
-              {getStatusLabel(client.status)}
-            </span>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
+        <div className="flex items-start gap-3">
+          <Avatar 
+            size="default" 
+            fallback={client.name.substring(0, 2).toUpperCase()}
+          />
+          <div className="flex-1">
+            <div className="flex items-start justify-between">
+              <div>
+                <CardTitle className="text-lg font-semibold">{client.name}</CardTitle>
+                {client.company && (
+                  <p className="text-sm text-gray-600 mt-1">{client.company}</p>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge 
+                  variant={client.status === 'active' ? 'default' : client.status === 'prospect' ? 'secondary' : 'outline'}
+                  className="text-xs"
+                >
+                  {getStatusLabel(client.status)}
+                </Badge>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </CardHeader>

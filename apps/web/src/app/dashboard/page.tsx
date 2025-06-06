@@ -5,8 +5,11 @@ import { MetricCard } from "@/components/dashboard/metric-card"
 import { RevenueChart } from "@/components/dashboard/revenue-chart"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Avatar } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { useDashboard } from "@/hooks/useQueries/useDashboard"
-import { TrendingUp, Users, Briefcase, DollarSign, Plus, Activity, Brain, Kanban } from "lucide-react"
+import { TrendingUp, Users, Briefcase, DollarSign, Plus, Activity, Brain, Kanban, Sparkles, Zap } from "lucide-react"
 import Link from "next/link"
 
 export default function DashboardPage() {
@@ -41,21 +44,34 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-1">
-              Visão geral do seu negócio
-            </p>
+          <div className="flex items-center gap-4">
+            <Avatar size="lg" fallback="AG" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-gray-600">Visão geral do seu negócio</p>
+                <Badge variant="secondary" className="text-xs">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Powered by IA
+                </Badge>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
+            <Link href="/ia">
+              <Button variant="gradient" size="sm">
+                <Brain className="h-4 w-4 mr-2" />
+                Central IA
+              </Button>
+            </Link>
             <Link href="/clientes">
-              <Button variant="outline">
+              <Button variant="outline" size="sm">
                 <Users className="h-4 w-4 mr-2" />
                 Clientes
               </Button>
             </Link>
             <Link href="/projetos">
-              <Button>
+              <Button variant="glow" size="sm">
                 <Plus className="h-4 w-4 mr-2" />
                 Novo Projeto
               </Button>
