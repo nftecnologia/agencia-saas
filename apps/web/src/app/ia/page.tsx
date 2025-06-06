@@ -39,321 +39,399 @@ import {
   Rocket
 } from "lucide-react"
 
-const aiAgents = {
+interface AIAgent {
+  id: string
+  title: string
+  howItWorks: string
+  generates: string
+  advantage: string
+  icon: any
+  color: string
+  category: string
+  features: string[]
+}
+
+const aiAgents: Record<string, AIAgent[]> = {
   meta: [
     {
       id: "meta-persona-generator",
       title: "Gerador de Persona",
-      description: "Cria personas detalhadas para segmentação precisa de campanhas no Meta",
+      howItWorks: "O usuário preenche informações básicas sobre o negócio (segmento, ticket médio, tipo de cliente, problemas/desejos do público, região).",
+      generates: "Persona detalhada com nome fictício, faixa etária, profissão, rotina, dores, objeções, sonhos, canais favoritos e mini-storytelling + insights comportamentais para copy e criativos.",
+      advantage: "Ajuda agências e clientes a terem clareza de quem estão falando, facilitando toda a estratégia.",
       icon: Users,
       color: "bg-blue-600",
       category: "Meta Ads",
-      features: ["Análise demográfica", "Comportamentos", "Interesses", "Lookalike audiences"]
+      features: ["Persona completa", "Insights comportamentais", "Mini-storytelling", "Direcionamento de copy"]
     },
     {
       id: "meta-copy-generator",
       title: "Gerador de Copy",
-      description: "Cria copies otimizadas para anúncios no Facebook e Instagram",
+      howItWorks: "O usuário informa objetivo, produto, persona e tom desejado (urgência, autoridade, emocional).",
+      generates: "Headline (até 40 chars), texto primário (até 125 chars) e descrição (até 30 chars) otimizados + sugestões de CTAs + variações para testes A/B.",
+      advantage: "Garante copies profissionais, persuasivos e em conformidade com políticas do Meta, acelerando publicação.",
       icon: PenTool,
       color: "bg-blue-700",
       category: "Meta Ads",
-      features: ["Headlines persuasivas", "Descrições envolventes", "CTAs otimizados", "Copy para carrossel"]
+      features: ["Copy completa Meta", "CTAs sugeridos", "Variações A/B", "Conformidade políticas"]
     },
     {
       id: "meta-audience-segmentation",
       title: "Segmentação de Público",
-      description: "Define segmentações precisas baseadas em dados e comportamentos",
+      howItWorks: "O usuário seleciona objetivo da campanha, público-alvo geral, região e detalhes básicos.",
+      generates: "Públicos prontos para copiar/colar (interesses, comportamentos, demográficos, lookalike, remarketing) + exclusões para evitar sobreposição + estratégias de ampliar/restringir.",
+      advantage: "Reduz tentativa e erro, acelera processo e garante segmentação alinhada ao objetivo da campanha.",
       icon: Target,
       color: "bg-blue-800",
       category: "Meta Ads",
-      features: ["Interesses detalhados", "Comportamentos específicos", "Exclusões estratégicas", "Custom audiences"]
+      features: ["Públicos copy/paste", "Exclusões estratégicas", "Lookalike audiences", "Remarketing"]
     },
     {
       id: "meta-ab-testing",
       title: "Testes A/B Automatizados",
-      description: "Gera variações de anúncios para testes A/B otimizados",
+      howItWorks: "O usuário informa o que deseja testar (headline, criativo, público, CTA).",
+      generates: "Planos automáticos de testes A/B com variações para cada elemento + cronograma de testes + checklist de acompanhamento + modelo de relatório comparativo.",
+      advantage: "Profissionaliza processo de testes, facilita experimentações e acelera otimização das campanhas.",
       icon: BarChart3,
       color: "bg-blue-500",
       category: "Meta Ads",
-      features: ["Variações de copy", "Testes de imagem", "Otimização de CTA", "Análise de resultados"]
+      features: ["Planos de teste", "Cronograma", "Checklist", "Relatórios"]
     }
   ],
   instagram: [
     {
       id: "insta-caption-generator",
       title: "Gerador de Legendas",
-      description: "Cria legendas envolventes e persuasivas para posts do Instagram",
+      howItWorks: "O usuário informa tema, objetivo do post, público-alvo, tom de voz e pode colar um briefing.",
+      generates: "Legendas prontas para feed, stories ou reels, adaptadas ao objetivo (venda, engajamento, educativo, institucional) + variações de CTA + sugestões de perguntas para estimular comentários.",
+      advantage: "Garante posts mais engajadores, poupa tempo e padroniza o tom da marca.",
       icon: MessageSquare,
       color: "bg-pink-500",
       category: "Instagram",
-      features: ["Storytelling", "CTAs eficazes", "Tom de voz", "Engajamento"]
+      features: ["Legendas personalizadas", "Variações de CTA", "Perguntas engajadoras", "Tom de marca"]
     },
     {
       id: "insta-post-ideas",
       title: "Gerador de Ideias de Post",
-      description: "Sugere conteúdos criativos e relevantes para o feed",
+      howItWorks: "O usuário informa nicho, público e datas especiais, ou seleciona temas de interesse.",
+      generates: "Ideias de posts para feed, stories, reels, carrosséis e enquetes, já com sugestões de estrutura de texto + sugestões de abordagens diferentes para o mesmo tema (lista, dica, polêmica, storytelling).",
+      advantage: "Nunca falta ideia nova de conteúdo, mantendo a criatividade em alta.",
       icon: Sparkles,
       color: "bg-pink-600",
       category: "Instagram",
-      features: ["Trends atuais", "Conteúdo viral", "Seasonal content", "Nichos específicos"]
+      features: ["Ideias criativas", "Múltiplos formatos", "Abordagens variadas", "Estruturas prontas"]
     },
     {
       id: "insta-carousel-text",
       title: "Carrossel Textual",
-      description: "Cria carrosséis informativos com slides de texto otimizados",
+      howItWorks: "O usuário passa um tema/assunto central e objetivo do carrossel.",
+      generates: "Texto estruturado em sequência de slides: título de cada slide, argumentos, frases de impacto, chamada final para ação/comentário + sugestão de ordem dos slides e tópicos para cada um.",
+      advantage: "Facilita a criação de carrosséis envolventes, didáticos e persuasivos só com texto, pronto para adaptar no design.",
       icon: FileText,
       color: "bg-pink-700",
       category: "Instagram",
-      features: ["Slides educativos", "Dicas e tutoriais", "Listas práticas", "Templates visuais"]
+      features: ["Sequência de slides", "Frases de impacto", "Estrutura didática", "CTA final"]
     },
     {
       id: "insta-editorial-planning",
       title: "Planejamento Editorial",
-      description: "Organiza calendário de conteúdo estratégico para Instagram",
+      howItWorks: "O usuário define frequência de postagens, temas prioritários, datas comemorativas e público.",
+      generates: "Calendário com títulos de posts, legenda base sugerida, CTA e hashtag ideal para cada data + dicas rápidas para adaptar conteúdo a diferentes formatos (feed, stories, reels).",
+      advantage: "Organização máxima para o calendário do social media e clareza do que postar.",
       icon: Calendar,
       color: "bg-pink-400",
       category: "Instagram",
-      features: ["Calendário mensal", "Temas semanais", "Mix de conteúdo", "Datas especiais"]
+      features: ["Calendário completo", "Legendas base", "Datas especiais", "Adaptação de formatos"]
     },
     {
       id: "insta-hashtag-generator",
       title: "Gerador de Hashtags",
-      description: "Seleciona hashtags estratégicas para máximo alcance e engajamento",
+      howItWorks: "O usuário informa tema do post e público-alvo.",
+      generates: "Listas de hashtags segmentadas (populares, médias e de nicho) + dicas de como variar hashtags para evitar shadowban + sugestão de agrupamentos para diferentes tipos de post.",
+      advantage: "Amplia alcance e otimiza tempo de pesquisa para o social media.",
       icon: Search,
       color: "bg-pink-800",
       category: "Instagram",
-      features: ["Tags de nicho", "Volume de busca", "Competitividade", "Mix estratégico"]
+      features: ["Hashtags segmentadas", "Evita shadowban", "Agrupamentos temáticos", "Otimização de alcance"]
     },
     {
       id: "insta-benchmarking",
       title: "Benchmarking de Conteúdo",
-      description: "Analisa concorrentes e identifica oportunidades de conteúdo",
+      howItWorks: "O usuário informa concorrentes ou referências.",
+      generates: "Análise textual dos tipos de conteúdo postado (temas mais usados, formatos, chamadas, abordagem) + sugestões de conteúdos semelhantes ou lacunas para explorar.",
+      advantage: "Ajuda a agência a se inspirar e se diferenciar, sem copiar.",
       icon: TrendingUp,
       color: "bg-pink-300",
       category: "Instagram",
-      features: ["Análise de concorrentes", "Tendências do nicho", "Gap de conteúdo", "Oportunidades"]
+      features: ["Análise de concorrentes", "Identificação de lacunas", "Inspiração estratégica", "Diferenciação"]
     },
     {
       id: "insta-reply-generator",
       title: "Gerador de Respostas",
-      description: "Cria respostas personalizadas para comentários e DMs",
+      howItWorks: "O usuário informa possíveis dúvidas do público ou comentários frequentes.",
+      generates: "Respostas automáticas e personalizadas para comentários e directs, prontas para copiar/colar + sugestão de frases para reverter objeção, agradecer feedback ou incentivar mais interação.",
+      advantage: "Acelera atendimento, garante padrão e humanização das respostas.",
       icon: Mail,
       color: "bg-pink-900",
       category: "Instagram",
-      features: ["Respostas automáticas", "Tom personalizado", "FAQ responses", "Engajamento ativo"]
+      features: ["Respostas prontas", "Gestão de objeções", "Humanização", "Padronização"]
     }
   ],
   youtube: [
     {
       id: "youtube-script-generator",
       title: "Gerador de Roteiro",
-      description: "Cria roteiros completos e envolventes para vídeos do YouTube",
+      howItWorks: "O usuário informa o tema, objetivo do vídeo (educacional, institucional, venda, review, tutorial) e duração desejada.",
+      generates: "Roteiro completo, incluindo introdução, tópicos principais, argumentos, perguntas engajadoras, CTAs e encerramento + sugestões de cortes para shorts/reels + títulos alternativos para variações.",
+      advantage: "Facilita a produção para quem não tem experiência em roteiro, acelerando o processo criativo.",
       icon: Video,
       color: "bg-red-600",
       category: "YouTube",
-      features: ["Hook inicial", "Estrutura narrativa", "CTAs no vídeo", "Timing otimizado"]
+      features: ["Roteiro completo", "Cortes para shorts", "Estrutura narrativa", "CTAs estratégicos"]
     },
     {
       id: "youtube-seo-optimizer",
       title: "Título, Descrição e Tags",
-      description: "Otimiza títulos, descrições e tags para SEO do YouTube",
+      howItWorks: "O usuário fornece o roteiro ou tema do vídeo.",
+      generates: "Títulos otimizados para SEO e engajamento, com sugestões de curiosidade e palavras-chave relevantes + descrições completas (com sumário, CTA, links, hashtags e timestamp) + lista de tags sugeridas para aumentar alcance orgânico.",
+      advantage: "Aumenta as chances de ranqueamento, engajamento e facilita uploads em massa.",
       icon: Search,
       color: "bg-red-700",
       category: "YouTube",
-      features: ["Títulos clicáveis", "Descrições otimizadas", "Tags relevantes", "Thumbnails concepts"]
+      features: ["Títulos clicáveis", "Descrições completas", "Tags relevantes", "SEO otimizado"]
     },
     {
       id: "youtube-content-planning",
       title: "Planejamento de Conteúdo",
-      description: "Estratégias de conteúdo e calendário para canal do YouTube",
+      howItWorks: "O usuário informa frequência desejada de postagens, público-alvo e principais temas.",
+      generates: "Calendário editorial com temas, formatos (longos, shorts, lives), datas sugeridas e briefings resumidos para cada vídeo.",
+      advantage: "Traz organização e visão de longo prazo para o canal, facilitando o crescimento e a consistência.",
       icon: Calendar,
       color: "bg-red-500",
       category: "YouTube",
-      features: ["Séries de vídeos", "Trending topics", "Seasonal content", "Consistency plan"]
+      features: ["Calendário editorial", "Mix de formatos", "Briefings prontos", "Planejamento estratégico"]
     },
     {
       id: "youtube-old-video-optimizer",
       title: "Otimização de Vídeos Antigos",
-      description: "Revitaliza vídeos antigos com otimizações de SEO e conteúdo",
+      howItWorks: "O usuário envia os títulos/descrições antigos.",
+      generates: "Sugestões de novos títulos, descrições e tags otimizadas para vídeos antigos + recomendações de atualização de thumb e links internos para aumentar views e tempo de exibição.",
+      advantage: "Recupera vídeos antigos com baixo desempenho, potencializando resultados já existentes.",
       icon: RefreshCw,
       color: "bg-red-800",
       category: "YouTube",
-      features: ["Análise de performance", "Novos títulos", "Descriptions update", "Cards e end screens"]
+      features: ["Revitalização", "Novos títulos", "Tags otimizadas", "Links internos"]
     }
   ],
   blog: [
     {
       id: "blog-ideas-generator",
       title: "Gerador de Ideias",
-      description: "Sugere tópicos relevantes e tendências para artigos de blog",
+      howItWorks: "O usuário informa o nicho, público-alvo, palavras-chave ou objetivos do blog (atrair tráfego, gerar leads, educar).",
+      generates: "Lista de ideias de artigos relevantes e alinhados com tendências do segmento + títulos sugestivos e já otimizados para SEO + sugestão de abordagem (lista, tutorial, análise, opinião).",
+      advantage: "Nunca falta conteúdo relevante e estratégico para o blog.",
       icon: Sparkles,
       color: "bg-green-600",
       category: "Blog/SEO",
-      features: ["Keywords research", "Trending topics", "Seasonal content", "Competitor analysis"]
+      features: ["Ideias estratégicas", "Títulos SEO", "Abordagens variadas", "Trends atuais"]
     },
     {
       id: "blog-structure-creator",
       title: "Estruturador de Post",
-      description: "Cria estruturas otimizadas para artigos com foco em SEO",
+      howItWorks: "O usuário seleciona uma ideia ou título de artigo e o público-alvo.",
+      generates: "Estrutura detalhada com tópicos (H1, H2, H3), introdução, tópicos intermediários e sugestão de conclusão + sugestão de CTA e links internos/externos para enriquecer o conteúdo.",
+      advantage: "Facilita para o redator seguir um roteiro claro e otimizado para SEO.",
       icon: FileText,
       color: "bg-green-700",
       category: "Blog/SEO",
-      features: ["H1, H2, H3 hierarchy", "Meta descriptions", "Internal linking", "Content outline"]
+      features: ["Estrutura H1-H3", "CTAs estratégicos", "Links internos", "Conclusões eficazes"]
     },
     {
       id: "blog-paragraph-generator",
       title: "Gerador de Parágrafos",
-      description: "Escreve parágrafos otimizados e envolventes para artigos",
+      howItWorks: "O usuário insere o tema ou a seção do artigo que precisa de desenvolvimento.",
+      generates: "Blocos de texto prontos e bem escritos, com linguagem adequada ao público + sugestões de exemplos, dados e argumentos para fortalecer o conteúdo.",
+      advantage: "Agiliza a redação, mantém consistência e evita bloqueio criativo.",
       icon: PenTool,
       color: "bg-green-500",
       category: "Blog/SEO",
-      features: ["SEO writing", "Readability", "Keyword density", "Engaging content"]
+      features: ["Textos prontos", "Exemplos práticos", "Argumentos sólidos", "Linguagem adequada"]
     },
     {
       id: "blog-seo-optimizer",
       title: "Otimização SEO",
-      description: "Otimiza conteúdo existente para melhor rankeamento nos buscadores",
+      howItWorks: "O usuário informa a palavra-chave principal e o texto base (rascunho ou artigo completo).",
+      generates: "Sugestões de melhorias de SEO: uso de palavra-chave, meta description, títulos alternativos, intertítulos, perguntas frequentes (FAQ) + identificação de oportunidades para palavras-chave secundárias.",
+      advantage: "Eleva a qualidade técnica do artigo e aumenta as chances de ranqueamento.",
       icon: TrendingUp,
       color: "bg-green-800",
       category: "Blog/SEO",
-      features: ["On-page SEO", "Schema markup", "Internal links", "Meta optimization"]
+      features: ["Otimização completa", "Keywords secundárias", "Meta descriptions", "FAQs estratégicas"]
     },
     {
       id: "blog-meta-generator",
       title: "Meta Descriptions e Slugs",
-      description: "Cria meta descriptions e slugs otimizados para SEO",
+      howItWorks: "O usuário envia o texto do artigo e o título.",
+      generates: "Meta description persuasiva, entre 140 e 160 caracteres, focada em SEO e CTR + sugestões de slug otimizadas e amigáveis para o artigo.",
+      advantage: "Facilita o processo de publicação, garantindo qualidade técnica.",
       icon: Code,
       color: "bg-green-400",
       category: "Blog/SEO",
-      features: ["Click-worthy metas", "SEO-friendly slugs", "Character optimization", "SERP preview"]
+      features: ["Meta descriptions", "Slugs otimizados", "CTR melhorado", "SEO técnico"]
     },
     {
       id: "blog-content-updater",
       title: "Atualização de Conteúdo",
-      description: "Revisa e atualiza artigos antigos para manter relevância",
+      howItWorks: "O usuário informa o artigo antigo ou parte do texto.",
+      generates: "Sugestões de atualização textual (novos dados, tendências recentes, reformulação de parágrafos desatualizados) + recomendações para enriquecer o artigo e mantê-lo relevante.",
+      advantage: "Mantém o blog sempre atualizado, melhorando SEO e autoridade.",
       icon: RefreshCw,
       color: "bg-green-900",
       category: "Blog/SEO",
-      features: ["Content freshness", "New information", "Updated stats", "Improved SEO"]
+      features: ["Atualizações estratégicas", "Dados recentes", "Relevância mantida", "SEO melhorado"]
     },
     {
       id: "blog-faq-generator",
       title: "Gerador de FAQs",
-      description: "Cria seções de perguntas frequentes otimizadas para SEO",
+      howItWorks: "O usuário indica o tema do artigo ou serviço.",
+      generates: "Perguntas frequentes e respostas para enriquecer o artigo + listas de dicas, benefícios, erros comuns ou passos para determinado objetivo.",
+      advantage: "Deixa o conteúdo mais completo, didático e atrativo para buscadores.",
       icon: MessageSquare,
       color: "bg-green-300",
       category: "Blog/SEO",
-      features: ["People Also Ask", "Schema FAQ", "Featured snippets", "Voice search optimization"]
+      features: ["FAQs estratégicas", "Listas práticas", "Conteúdo completo", "SEO melhorado"]
     }
   ],
   whatsapp: [
     {
       id: "whatsapp-broadcast-generator",
       title: "Mensagens de Lista/Broadcast",
-      description: "Cria mensagens estratégicas para listas de transmissão",
+      howItWorks: "O usuário informa objetivo da campanha (promoção, lançamento, reengajamento, pós-venda, convite para evento), público-alvo e tom da mensagem.",
+      generates: "Mensagens curtas, personalizadas e claras, ideais para listas de transmissão + variações para o mesmo objetivo, evitando repetição e spam + sugestão de CTA e fechamento.",
+      advantage: "Torna campanhas de WhatsApp mais profissionais, engajadoras e evita bloqueios.",
       icon: Globe,
       color: "bg-emerald-600",
       category: "WhatsApp",
-      features: ["Mensagens de engajamento", "Promocionais", "Informativos", "CTAs diretos"]
+      features: ["Mensagens profissionais", "Evita spam", "Variações criativas", "CTAs eficazes"]
     },
     {
       id: "whatsapp-audio-scripts",
       title: "Roteiros de Áudio",
-      description: "Desenvolve scripts para áudios persuasivos e profissionais",
+      howItWorks: "O usuário informa objetivo do áudio (venda, pós-venda, suporte, instrução, convite), detalhes do produto/serviço e tom desejado.",
+      generates: "Roteiros prontos para serem gravados: introdução, apresentação do benefício, instrução clara, chamada para ação e encerramento simpático + sugestão de frases para soar natural e envolvente.",
+      advantage: "Ajuda vendedores e suporte a se comunicarem melhor, sem improvisos, mantendo padrão de qualidade.",
       icon: Mic,
       color: "bg-emerald-700",
       category: "WhatsApp",
-      features: ["Tom conversacional", "Mensagens claras", "CTAs em áudio", "Timing otimizado"]
+      features: ["Roteiros profissionais", "Tom natural", "Estrutura clara", "Qualidade padronizada"]
     },
     {
       id: "whatsapp-quick-replies",
       title: "Respostas Rápidas",
-      description: "Cria banco de respostas prontas para atendimento eficiente",
+      howItWorks: "O usuário insere perguntas/dúvidas frequentes dos clientes ou situações recorrentes (preço, prazo, envio, suporte).",
+      generates: "Respostas curtas, diretas e humanizadas, prontas para copiar e colar + variações para o mesmo tema, permitindo personalização e rapidez.",
+      advantage: "Aumenta produtividade e uniformiza o atendimento, mesmo com diferentes operadores.",
       icon: Zap,
       color: "bg-emerald-500",
       category: "WhatsApp",
-      features: ["FAQ responses", "Objection handling", "Info produtos", "Direcionamentos"]
+      features: ["Respostas rápidas", "Padronização", "Variações humanizadas", "Produtividade alta"]
     },
     {
       id: "whatsapp-sales-scripts",
       title: "Scripts de Vendas",
-      description: "Desenvolve sequências de vendas otimizadas para WhatsApp",
+      howItWorks: "O usuário informa o produto/serviço, público e etapa da venda (abordagem inicial, apresentação, objeção, fechamento).",
+      generates: "Scripts para cada etapa do funil: abordagem, identificação da dor, apresentação da solução, tratamento de objeções e fechamento + sugestão de perguntas para engajar o cliente.",
+      advantage: "Profissionaliza o processo comercial e eleva a taxa de conversão no WhatsApp.",
       icon: DollarSign,
       color: "bg-emerald-800",
       category: "WhatsApp",
-      features: ["Abordagem inicial", "Apresentação de benefícios", "Fechamento", "Objeções"]
+      features: ["Scripts completos", "Funil estruturado", "Tratamento de objeções", "Taxa de conversão alta"]
     },
     {
       id: "whatsapp-follow-up",
       title: "Follow-up e Reengajamento",
-      description: "Cria estratégias de follow-up para reativar leads parados",
+      howItWorks: "O usuário seleciona objetivo (retomar contato, lembrete de orçamento, agradecer, aniversário, pós-venda).",
+      generates: "Mensagens prontas para retomar conversas ou reforçar relacionamentos + dicas de abordagens personalizadas para diferentes contextos.",
+      advantage: "Aumenta o ciclo de vida do cliente e melhora a chance de recompra.",
       icon: RefreshCw,
       color: "bg-emerald-400",
       category: "WhatsApp",
-      features: ["Sequências automáticas", "Reativação", "Nurturing", "Win-back campaigns"]
+      features: ["Reengajamento", "Contextos variados", "Relacionamento duradouro", "Recompra facilitada"]
     },
     {
       id: "whatsapp-support-scripts",
       title: "Scripts de Atendimento",
-      description: "Desenvolve protocolos de atendimento profissional",
+      howItWorks: "O usuário define o tipo de atendimento (dúvida técnica, reclamação, orientação de uso, pedido de desculpas).",
+      generates: "Mensagens claras e empáticas para cada situação + sugestão de frase de encerramento e pesquisa de satisfação.",
+      advantage: "Eleva o padrão de atendimento e reduz tempo de resposta.",
       icon: Phone,
       color: "bg-emerald-900",
       category: "WhatsApp",
-      features: ["Protocolos de atendimento", "Escalonamento", "Resolução de problemas", "Satisfação"]
+      features: ["Atendimento empático", "Situações variadas", "Padrão elevado", "Resposta rápida"]
     }
   ],
   crm: [
     {
       id: "crm-support-scripts",
       title: "Scripts de Atendimento",
-      description: "Cria protocolos profissionais para atendimento ao cliente",
+      howItWorks: "O usuário informa o canal de atendimento (WhatsApp, chat, e-mail), contexto do contato (primeiro atendimento, dúvidas, suporte técnico, onboarding) e tom desejado.",
+      generates: "Scripts prontos para diferentes situações: saudação inicial, coleta de dados, solução de dúvidas, direcionamento para setores, finalização + sugestões de frases para humanizar e padronizar + opções adaptadas para cada canal.",
+      advantage: "Agiliza o atendimento, evita improvisos, garante padrão e melhora a experiência do cliente.",
       icon: Phone,
       color: "bg-indigo-600",
       category: "CRM/Atendimento",
-      features: ["Protocolos padrão", "Escalonamento", "Resolução rápida", "Empatia"]
+      features: ["Scripts multicanal", "Padronização", "Humanização", "Experiência melhorada"]
     },
     {
       id: "crm-complaint-responses",
       title: "Respostas a Reclamações",
-      description: "Desenvolve respostas empáticas e solutivas para reclamações",
+      howItWorks: "O usuário informa o tipo de reclamação/feedback (atraso, produto defeituoso, mau atendimento, crítica pública) e tom da resposta (empático, objetivo, conciliador).",
+      generates: "Modelos de resposta personalizados para cada situação, incluindo pedido de desculpas, explicação, solução proposta e convite para conversa privada + sugestões de frases para amenizar conflitos + opções para resposta pública e privada.",
+      advantage: "Minimiza danos à reputação, acelera resposta, reduz atrito e humaniza a comunicação.",
       icon: Shield,
       color: "bg-indigo-700",
       category: "CRM/Atendimento",
-      features: ["Gestão de crises", "Recuperação de cliente", "Soluções práticas", "Compensações"]
+      features: ["Gestão de crises", "Respostas personalizadas", "Redução de atrito", "Proteção da reputação"]
     },
     {
       id: "crm-post-sale-followup",
       title: "Follow-up Pós-venda",
-      description: "Cria sequências de acompanhamento após a venda",
+      howItWorks: "O usuário seleciona o momento do contato (após compra, após suporte, 7 dias depois, reativação, aniversário) e pode informar detalhes do produto/serviço.",
+      generates: "Mensagens prontas para acompanhamento (experiência, dúvidas, parabéns) + sugestões de mensagens para pedir feedback, indicar novos produtos ou convidar para promoções + variações para e-mail, WhatsApp ou SMS.",
+      advantage: "Fortalece o relacionamento, aumenta as chances de recompra e melhora a percepção da marca.",
       icon: Users,
       color: "bg-indigo-500",
       category: "CRM/Atendimento",
-      features: ["Onboarding", "Check-ins regulares", "Upsell opportunities", "Retention"]
+      features: ["Relacionamento duradouro", "Múltiplos momentos", "Multicanal", "Recompra facilitada"]
     },
     {
       id: "crm-satisfaction-survey",
       title: "Pesquisa de Satisfação",
-      description: "Desenvolve questionários para medir satisfação do cliente",
+      howItWorks: "O usuário informa o contexto (após venda, após suporte, avaliação de serviço) e o canal desejado (e-mail, WhatsApp, formulário).",
+      generates: "Perguntas de NPS e CSAT, com textos de introdução e agradecimento + sugestões de perguntas abertas para coleta de sugestões + templates de mensagens para convidar o cliente a responder.",
+      advantage: "Facilita a coleta de feedback, padroniza pesquisas e aumenta a taxa de resposta com textos envolventes.",
       icon: BarChart3,
       color: "bg-indigo-800",
       category: "CRM/Atendimento",
-      features: ["NPS surveys", "Feedback collection", "Improvement insights", "Customer journey mapping"]
+      features: ["NPS e CSAT", "Templates prontos", "Taxa de resposta alta", "Feedback estruturado"]
     }
   ],
   creative: [
     {
       id: "complete-post-generator",
       title: "Gerador de Posts Completos",
-      description: "Cria posts completos com imagem, texto, legenda e hashtags",
+      howItWorks: "O usuário informa o tema, objetivo, público-alvo e plataforma desejada.",
+      generates: "Concept visual detalhado + copy persuasiva + legenda envolvente + hashtags estratégicas + sugestões para Stories + variações para diferentes formatos.",
+      advantage: "Economiza tempo criativo e garante consistência visual e textual em todas as peças.",
       icon: Image,
       color: "bg-purple-600",
       category: "Feed & Stories",
-      features: ["Concept visual", "Copy persuasiva", "Hashtags estratégicas", "Stories templates"]
+      features: ["Concept completo", "Copy + visual", "Hashtags estratégicas", "Múltiplos formatos"]
     }
   ]
 }
 
-function AgentCard({ agent, onClick }: { agent: any; onClick: () => void }) {
+function AgentCard({ agent, onClick }: { agent: AIAgent; onClick: () => void }) {
   const IconComponent = agent.icon
   
   return (
@@ -374,642 +452,28 @@ function AgentCard({ agent, onClick }: { agent: any; onClick: () => void }) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-gray-600 text-sm leading-relaxed">
-          {agent.description}
-        </p>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+              Como funciona:
+            </Label>
+            <p className="text-gray-600 text-xs leading-relaxed">
+              {agent.howItWorks}
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+              Vantagem:
+            </Label>
+            <p className="text-gray-600 text-xs leading-relaxed">
+              {agent.advantage}
+            </p>
+          </div>
+        </div>
         
         <div className="space-y-2">
           <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
             Funcionalidades:
           </Label>
-          <div className="flex flex-wrap gap-1">
-            {agent.features.slice(0, 2).map((feature: string, index: number) => (
-              <span key={index} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
-                {feature}
-              </span>
-            ))}
-            {agent.features.length > 2 && (
-              <span className="text-xs text-gray-400">+{agent.features.length - 2}</span>
-            )}
-          </div>
-        </div>
-        
-        <Button className="w-full group-hover:bg-blue-600 transition-colors" size="sm">
-          <Brain className="h-4 w-4 mr-2" />
-          Ativar Agente
-        </Button>
-      </CardContent>
-    </Card>
-  )
-}
-
-function AgentModal({ agent, isOpen, onClose }: { agent: any; isOpen: boolean; onClose: () => void }) {
-  const [prompt, setPrompt] = useState("")
-  const [result, setResult] = useState("")
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedFeature, setSelectedFeature] = useState("")
-  
-  if (!isOpen) return null
-  
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return
-    
-    setIsGenerating(true)
-    
-    // Simulação de geração de conteúdo mais sofisticada
-    setTimeout(() => {
-      let mockResult = ""
-      
-      switch (agent.id) {
-        case "marketing-strategy":
-          mockResult = `📋 ESTRATÉGIA DE MARKETING DIGITAL COMPLETA
-
-🎯 ANÁLISE DO CLIENTE: ${prompt}
-
-📊 SITUAÇÃO ATUAL
-• Presença digital: Análise de canais existentes
-• Posicionamento: Avaliação da marca no mercado
-• Concorrência: Mapeamento de players principais
-
-🎯 PERSONAS IDENTIFICADAS
-👤 Persona Primária: Profissionais 25-40 anos
-• Comportamento online: Alta atividade em LinkedIn e Instagram
-• Dores: Falta de tempo e resultados inconsistentes
-• Gatilhos: ROI comprovado e cases de sucesso
-
-🚀 ESTRATÉGIA RECOMENDADA
-1. **Rebranding Digital** (Mês 1-2)
-   - Atualização de identidade visual
-   - Otimização de perfis sociais
-   - Criação de linha editorial
-
-2. **Conteúdo Estratégico** (Mês 1-3)
-   - 4 posts/semana no Instagram
-   - 2 artigos/mês no blog
-   - Newsletter quinzenal
-
-3. **Campanhas Pagas** (Mês 2-4)
-   - Google Ads: R$ 3.000/mês
-   - Facebook/Instagram: R$ 2.000/mês
-   - LinkedIn: R$ 1.500/mês
-
-💰 INVESTIMENTO SUGERIDO
-• Inicial: R$ 15.000 (setup)
-• Mensal: R$ 8.500 (gestão + mídia)
-• ROI Projetado: 300% em 6 meses
-
-📈 MÉTRICAS DE SUCESSO
-• Leads qualificados: +150%
-• Taxa de conversão: +80%
-• Engagement: +200%
-• Brand awareness: +120%`
-          break
-          
-        case "content-creator":
-          mockResult = `🎨 CONTEÚDO MULTIMÍDIA PERSONALIZADO
-
-📱 POSTS PARA REDES SOCIAIS
-
-🔥 POST 1 - INSTAGRAM FEED
-"💡 Você sabia que ${prompt}?
-
-✨ 3 dicas que vão transformar seus resultados:
-
-1️⃣ [Dica específica baseada no tema]
-2️⃣ [Estratégia comprovada]
-3️⃣ [Ação prática imediata]
-
-💬 Qual dessas você vai aplicar primeiro?
-
-#MarketingDigital #ResultadosReais #Transformacao"
-
-📧 E-MAIL MARKETING
-Assunto: "Como ${prompt} pode revolucionar seu negócio"
-
-Olá [Nome],
-
-Você já pensou em como ${prompt} poderia ser o diferencial que seu negócio precisa?
-
-Empresas que aplicam essas estratégias têm visto resultados impressionantes:
-• 300% mais leads qualificados
-• 150% de aumento em vendas
-• 85% mais engajamento
-
-🎯 ROTEIRO PARA VÍDEO (60s)
-[0-5s] Hook: "Se você quer [resultado específico]..."
-[5-15s] Problema: "Mas está enfrentando [dor comum]..."
-[15-40s] Solução: "A resposta está em ${prompt}..."
-[40-55s] Prova social: "Nossos clientes conseguiram..."
-[55-60s] CTA: "Comentem 'QUERO' para saber mais!"
-
-📝 ARTIGO PARA BLOG (Introdução)
-# Como ${prompt} Está Revolucionando o Mercado Digital
-
-No cenário competitivo atual, ${prompt} emergiu como uma das estratégias mais eficazes para empresas que buscam crescimento sustentável...
-
-[Artigo completo de 1.500 palavras seria gerado]`
-          break
-          
-        case "data-analyst":
-          mockResult = `📊 ANÁLISE AVANÇADA DE DADOS - ${prompt}
-
-🎯 MÉTRICAS PRINCIPAIS
-┌─────────────────────────────────────┐
-│ KPI                │ Atual │ Meta   │
-├─────────────────────────────────────┤
-│ CTR                │ 2.4%  │ 3.5%   │
-│ CPC                │ R$1.20│ R$0.85 │
-│ Taxa Conversão     │ 3.8%  │ 5.2%   │
-│ CAC                │ R$45  │ R$35   │
-│ LTV                │ R$180 │ R$220  │
-│ ROI                │ 320%  │ 450%   │
-└─────────────────────────────────────┘
-
-📈 ANÁLISE DE TENDÊNCIAS
-• Pico de tráfego: Terças às 14h (+240%)
-• Melhor dia: Quinta-feira (+180% conversões)
-• Público mais engajado: 25-34 anos (65% do total)
-• Dispositivo preferido: Mobile (78%)
-
-🔍 INSIGHTS IDENTIFICADOS
-1. **Oportunidade de Horário**
-   - Aumentar budget às terças 13-15h
-   - Potencial de +40% em conversões
-
-2. **Otimização de Audiência**
-   - Focar em público 25-34 anos
-   - Expandir para lookalike similar
-
-3. **Melhoria de Funil**
-   - Landing page mobile precisa otimização
-   - Taxa de abandono: 65% (média: 45%)
-
-⚡ AÇÕES IMEDIATAS RECOMENDADAS
-✅ Ajustar lances para horários de pico
-✅ Criar versão mobile da landing page
-✅ Testar CTA mais direto
-✅ Implementar remarketing para carrinho abandonado
-
-💡 PROJEÇÃO COM OTIMIZAÇÕES
-• ROI esperado: +35% (de 320% para 432%)
-• Redução CAC: -22% (de R$45 para R$35)
-• Aumento conversões: +28%
-
-📋 PRÓXIMOS PASSOS
-1. Implementar mudanças (Semana 1)
-2. Monitorar resultados (Semana 2-3)
-3. Ajustar estratégia (Semana 4)
-4. Relatório de performance (Final do mês)`
-          break
-          
-        case "sales-assistant":
-          mockResult = `💼 PROPOSTA COMERCIAL PERSONALIZADA
-
-🎯 PARA: ${prompt}
-
-📋 RESUMO EXECUTIVO
-Desenvolvemos uma solução completa para transformar sua presença digital e gerar resultados mensuráveis através de estratégias comprovadas.
-
-🚀 OBJETIVOS DO PROJETO
-• Aumentar leads qualificados em 200%
-• Melhorar taxa de conversão em 150%
-• Reduzir custo de aquisição em 30%
-• Estabelecer autoridade no mercado
-
-📦 ESCOPO DOS SERVIÇOS
-
-🎨 FASE 1: FUNDAÇÃO DIGITAL (Mês 1)
-✅ Auditoria completa da presença digital
-✅ Rebranding e identidade visual
-✅ Setup de ferramentas e analytics
-✅ Estratégia de conteúdo personalizada
-
-🚀 FASE 2: EXECUÇÃO (Mês 2-4)
-✅ Criação de conteúdo (posts, artigos, vídeos)
-✅ Gestão de campanhas pagas
-✅ Automação de marketing
-✅ Otimização contínua baseada em dados
-
-📊 FASE 3: ESCALA (Mês 5-6)
-✅ Expansão para novos canais
-✅ Implementação de advanced features
-✅ Relatórios executivos mensais
-✅ Consultoria estratégica
-
-💰 INVESTIMENTO
-
-🔥 PACOTE PREMIUM - R$ 12.000/mês
-• Gestão completa de campanhas
-• Criação ilimitada de conteúdo
-• Automações avançadas
-• Relatórios semanais
-• Suporte prioritário 24/7
-
-🎁 BÔNUS EXCLUSIVOS (Valor: R$ 8.000)
-• Setup inicial completo GRÁTIS
-• Auditoria competitiva detalhada
-• Template de landing pages premium
-• Treinamento da equipe (4h)
-
-📈 ROI PROJETADO
-• Investimento 6 meses: R$ 72.000
-• Retorno esperado: R$ 216.000
-• ROI: 300% no primeiro ano
-
-🤝 PRÓXIMOS PASSOS
-1. ✅ Aprovação da proposta
-2. ✅ Assinatura do contrato
-3. ✅ Kickoff meeting (48h)
-4. ✅ Início da Fase 1
-
-⏰ OFERTA LIMITADA
-Esta proposta é válida até [data] e inclui todos os bônus mencionados.
-
-📞 CONTATO
-[Dados do consultor]
-WhatsApp: [número]
-E-mail: [email]
-
-"Estamos prontos para transformar seus resultados digitais!"
-`
-          break
-          
-        default:
-          mockResult = generateGenericResponse(agent, prompt)
-      }
-      
-      setResult(mockResult)
-      setIsGenerating(false)
-    }, 3000)
-  }
-  
-  const generateGenericResponse = (agent: any, prompt: string) => {
-    return `🤖 ${agent.title.toUpperCase()}
-
-📝 ANÁLISE: ${prompt}
-
-✨ RESULTADO GERADO:
-
-Baseado na sua solicitação, analisei os seguintes aspectos:
-
-${agent.features.map((feature: string, index: number) => 
-  `${index + 1}. **${feature}**
-   - Análise específica para ${prompt}
-   - Recomendações personalizadas
-   - Estratégias de implementação`
-).join('\n\n')}
-
-💡 INSIGHTS PRINCIPAIS:
-• Oportunidade identificada em ${prompt}
-• Estratégia recomendada baseada em IA
-• Implementação sugerida em fases
-
-🎯 PRÓXIMOS PASSOS:
-1. Validar estratégia com equipe
-2. Implementar primeiras ações
-3. Monitorar resultados
-4. Otimizar baseado em dados
-
-📊 RESULTADOS ESPERADOS:
-• Melhoria de performance em 30-50%
-• Redução de custos em 20-30%
-• Aumento de eficiência em 40-60%
-
-🚀 Esta análise foi gerada por IA especializada em ${agent.category.toLowerCase()}.`
-  }
-  
-  const handleCopy = () => {
-    navigator.clipboard.writeText(result)
-    alert("Conteúdo copiado para a área de transferência!")
-  }
-  
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-        <CardHeader className="border-b bg-gradient-to-r from-blue-50 to-purple-50">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className={`p-3 rounded-xl ${agent.color} text-white shadow-lg`}>
-                <agent.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <CardTitle className="text-xl font-bold text-gray-900">
-                  {agent.title}
-                </CardTitle>
-                <p className="text-gray-600 text-sm mt-1">{agent.description}</p>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {agent.features.map((feature: string, index: number) => (
-                    <span key={index} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <Button variant="ghost" onClick={onClose} size="lg">
-              ×
-            </Button>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="space-y-6 p-6">
-          {/* Feature Selection */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold text-gray-700">Selecione a funcionalidade:</Label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {agent.features.map((feature: string) => (
-                <Button
-                  key={feature}
-                  variant={selectedFeature === feature ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedFeature(feature)}
-                  className="text-xs h-8"
-                >
-                  {feature}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Input Section */}
-          <div className="space-y-3">
-            <Label htmlFor="prompt" className="text-sm font-semibold text-gray-700">
-              Descreva seu projeto ou necessidade:
-            </Label>
-            <textarea
-              id="prompt"
-              placeholder={`Ex: ${getPlaceholderForAgent(agent.id)}`}
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="min-h-[120px] w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={4}
-            />
-            <Button 
-              onClick={handleGenerate} 
-              disabled={!prompt.trim() || isGenerating}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3"
-              size="lg"
-            >
-              {isGenerating ? (
-                <>
-                  <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
-                  Processando com IA Avançada...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Gerar com {agent.title}
-                </>
-              )}
-            </Button>
-          </div>
-          
-          {/* Result Section */}
-          {result && (
-            <div className="space-y-4 border-t pt-6">
-              <div className="flex justify-between items-center">
-                <Label className="text-lg font-semibold text-gray-800">
-                  🎯 Resultado Gerado pelo {agent.title}
-                </Label>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={handleCopy}>
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copiar
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Download className="h-4 w-4 mr-2" />
-                    Baixar PDF
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Enviar por E-mail
-                  </Button>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-xl border border-gray-200 min-h-[300px] max-h-[500px] overflow-y-auto">
-                <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800 leading-relaxed">
-                  {result}
-                </pre>
-              </div>
-              <div className="flex justify-center gap-2 pt-4">
-                <Button variant="outline" size="sm">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Regenerar
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Personalizar
-                </Button>
-                <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                  <Download className="h-4 w-4 mr-2" />
-                  Salvar no Projeto
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-function getPlaceholderForAgent(agentId: string): string {
-  const placeholders: Record<string, string> = {
-    "marketing-strategy": "Uma agência de arquitetura que quer aumentar leads qualificados",
-    "content-creator": "Posts para Instagram sobre marketing digital para pequenas empresas",
-    "data-analyst": "Análise de performance das campanhas de Google Ads do último trimestre",
-    "sales-assistant": "Proposta para gestão de redes sociais para uma clínica médica",
-    "seo-specialist": "Otimização SEO para um e-commerce de roupas femininas",
-    "copywriter": "Copy para anúncio no Facebook para curso online de inglês",
-    "brand-designer": "Identidade visual para startup de tecnologia sustentável"
-  }
-  
-  return placeholders[agentId] || "Descreva seu projeto ou necessidade específica..."
-}
-
-export default function IAPage() {
-  const [selectedAgent, setSelectedAgent] = useState<any>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("")
-  
-  const allAgents = Object.values(aiAgents).flat()
-  const categories = [...new Set(allAgents.map(agent => agent.category))]
-  
-  const filteredAgents = allAgents.filter(agent => {
-    const matchesSearch = agent.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         agent.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = !selectedCategory || agent.category === selectedCategory
-    
-    return matchesSearch && matchesCategory
-  })
-
-  return (
-    <MainLayout>
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center items-center gap-3">
-            <div className="p-4 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-lg">
-              <Brain className="h-8 w-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Central de IA Especializada</h1>
-              <p className="text-gray-600 text-lg">
-                {allAgents.length} Agentes especializados para agências digitais
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center gap-4 text-sm">
-            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-2 rounded-lg">
-              <Sparkles className="h-4 w-4" />
-              <span>Powered by GPT-4 Turbo</span>
-            </div>
-            <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-2 rounded-lg">
-              <Rocket className="h-4 w-4" />
-              <span>7 Categorias Especializadas</span>
-            </div>
-            <div className="flex items-center gap-2 bg-purple-50 text-purple-700 px-3 py-2 rounded-lg">
-              <Target className="h-4 w-4" />
-              <span>Resultados Profissionais</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center max-w-2xl mx-auto">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Buscar agentes de IA..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          
-          <select 
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-w-[180px]"
-          >
-            <option value="">Todas as categorias</option>
-            {categories.map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Agents by Category */}
-        <Tabs defaultValue="meta" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-8 h-auto flex-wrap">
-            <TabsTrigger value="meta" className="flex items-center gap-2 min-w-[120px]">
-              <Target className="h-4 w-4" />
-              Meta Ads
-            </TabsTrigger>
-            <TabsTrigger value="instagram" className="flex items-center gap-2 min-w-[120px]">
-              <Camera className="h-4 w-4" />
-              Instagram
-            </TabsTrigger>
-            <TabsTrigger value="youtube" className="flex items-center gap-2 min-w-[120px]">
-              <Video className="h-4 w-4" />
-              YouTube
-            </TabsTrigger>
-            <TabsTrigger value="blog" className="flex items-center gap-2 min-w-[120px]">
-              <FileText className="h-4 w-4" />
-              Blog/SEO
-            </TabsTrigger>
-            <TabsTrigger value="whatsapp" className="flex items-center gap-2 min-w-[120px]">
-              <Phone className="h-4 w-4" />
-              WhatsApp
-            </TabsTrigger>
-            <TabsTrigger value="crm" className="flex items-center gap-2 min-w-[120px]">
-              <Users className="h-4 w-4" />
-              CRM
-            </TabsTrigger>
-            <TabsTrigger value="creative" className="flex items-center gap-2 min-w-[120px]">
-              <Palette className="h-4 w-4" />
-              Stories
-            </TabsTrigger>
-          </TabsList>
-          
-          {Object.entries(aiAgents).map(([category, agents]) => (
-            <TabsContent key={category} value={category} className="space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  {category === 'meta' ? 'Agentes Meta Ads' :
-                   category === 'instagram' ? 'Agentes Instagram' :
-                   category === 'youtube' ? 'Agentes YouTube' :
-                   category === 'blog' ? 'Agentes Blog/SEO' :
-                   category === 'whatsapp' ? 'Agentes WhatsApp' :
-                   category === 'crm' ? 'Agentes CRM/Atendimento' :
-                   'Agentes Feed & Stories'}
-                </h2>
-                <p className="text-gray-600">
-                  {category === 'meta' ? 'Especialistas em campanhas pagas no Facebook e Instagram' :
-                   category === 'instagram' ? 'Criação de conteúdo otimizado para Instagram' :
-                   category === 'youtube' ? 'Estratégias e otimização para YouTube' :
-                   category === 'blog' ? 'Conteúdo para blog e otimização SEO' :
-                   category === 'whatsapp' ? 'Comunicação e vendas via WhatsApp' :
-                   category === 'crm' ? 'Atendimento ao cliente e relacionamento' :
-                   'Criação completa de posts para redes sociais'}
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {agents.filter(agent => 
-                  (!searchTerm || 
-                   agent.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                   agent.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-                  (!selectedCategory || agent.category === selectedCategory)
-                ).map((agent) => (
-                  <AgentCard 
-                    key={agent.id} 
-                    agent={agent} 
-                    onClick={() => setSelectedAgent(agent)}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-
-        {/* All Agents View */}
-        {searchTerm && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 text-center">
-              Resultados da Busca: "{searchTerm}"
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredAgents.map((agent) => (
-                <AgentCard 
-                  key={agent.id} 
-                  agent={agent} 
-                  onClick={() => setSelectedAgent(agent)}
-                />
-              ))}
-            </div>
-            
-            {filteredAgents.length === 0 && (
-              <Card className="p-12 text-center">
-                <div className="text-gray-500">
-                  <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p className="text-lg font-medium mb-2">Nenhum agente encontrado</p>
-                  <p>Tente ajustar os filtros ou buscar por outros termos.</p>
-                </div>
-              </Card>
-            )}
-          </div>
-        )}
-
-
-        {/* Agent Modal */}
-        <AgentModal
-          agent={selectedAgent}
-          isOpen={!!selectedAgent}
-          onClose={() => setSelectedAgent(null)}
-        />
-      </div>
-    </MainLayout>
-  )
-}
+          <div className="flex flex-wrap gap-1
