@@ -46,13 +46,7 @@ export function useDataPrefetch() {
         // Se está no kanban, prefetch projetos do kanban
         queryClient.prefetchQuery({
           queryKey: ["kanban-projects"],
-          queryFn: async () => {
-            const result = await getKanbanProjects()
-            if (result?.data && 'success' in result.data && result.data.success) {
-              return result.data.data
-            }
-            throw new Error("Erro ao buscar projetos")
-          },
+          queryFn: getKanbanProjects,
           staleTime: 1000 * 60 * 5,
         })
       }
@@ -82,13 +76,7 @@ export function useDataPrefetch() {
       }),
       kanban: () => queryClient.prefetchQuery({
         queryKey: ["kanban-projects"],
-        queryFn: async () => {
-          const result = await getKanbanProjects()
-          if (result?.data && 'success' in result.data && result.data.success) {
-            return result.data.data
-          }
-          throw new Error("Erro ao buscar projetos")
-        },
+        queryFn: getKanbanProjects,
         staleTime: 1000 * 60 * 5,
       }),
       dashboard: () => queryClient.prefetchQuery({
