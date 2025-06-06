@@ -266,9 +266,9 @@ function ProjectCard({ project, onDragStart, onEdit, onDelete, onView }: {
       onDragEnd={handleDragEnd}
       onMouseDown={handleMouseDown}
     >
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 px-3 pt-3">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-sm font-semibold leading-tight flex-1 pr-2">
+          <CardTitle className="text-xs font-semibold leading-tight flex-1 pr-2">
             {project.name}
           </CardTitle>
           <div className="relative">
@@ -335,16 +335,16 @@ function ProjectCard({ project, onDragStart, onEdit, onDelete, onView }: {
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2 px-3 pb-3">
         {/* Progress Bar */}
         <div>
           <div className="flex justify-between items-center mb-1">
             <span className="text-xs text-gray-500">Progresso</span>
             <span className="text-xs font-medium">{project.progress}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-blue-500 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${project.progress}%` }}
             />
           </div>
@@ -364,48 +364,42 @@ function ProjectCard({ project, onDragStart, onEdit, onDelete, onView }: {
           </div>
         </div>
 
-        {/* Client */}
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-            <span className="text-xs font-medium">{project.client.avatar}</span>
-          </div>
-          <span className="text-xs text-gray-700">{project.client.name}</span>
-        </div>
-
         {/* Team & Priority */}
         <div className="flex items-center justify-between">
-          <div className="flex -space-x-2">
-            {project.team.slice(0, 3).map((member: any, index: number) => (
+          <div className="flex -space-x-1">
+            {project.team.slice(0, 2).map((member: any, index: number) => (
               <div 
                 key={index}
-                className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center border-2 border-white text-xs font-medium"
+                className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center border border-white text-xs font-medium"
                 title={member.name}
               >
                 {member.avatar}
               </div>
             ))}
-            {project.team.length > 3 && (
-              <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center border-2 border-white text-xs">
-                +{project.team.length - 3}
+            {project.team.length > 2 && (
+              <div className="w-5 h-5 bg-gray-300 rounded-full flex items-center justify-center border border-white text-xs">
+                +{project.team.length - 2}
               </div>
             )}
           </div>
           
-          <span className={`text-xs px-2 py-1 rounded-full border flex items-center gap-1 ${getPriorityColor(project.priority)}`}>
+          <span className={`text-xs px-1.5 py-0.5 rounded border flex items-center gap-1 ${getPriorityColor(project.priority)}`}>
             {getPriorityIcon(project.priority)}
-            {project.priority}
+            {project.priority === 'urgent' ? 'Urg' : 
+             project.priority === 'high' ? 'Alt' :
+             project.priority === 'medium' ? 'Med' : 'Bai'}
           </span>
         </div>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-1">
-          {project.tags.slice(0, 2).map((tag: string, index: number) => (
-            <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+          {project.tags.slice(0, 1).map((tag: string, index: number) => (
+            <span key={index} className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
               {tag}
             </span>
           ))}
-          {project.tags.length > 2 && (
-            <span className="text-xs text-gray-400">+{project.tags.length - 2}</span>
+          {project.tags.length > 1 && (
+            <span className="text-xs text-gray-400">+{project.tags.length - 1}</span>
           )}
         </div>
       </CardContent>
