@@ -21,7 +21,8 @@
     "db:generate": "npm run generate --workspace=@agenciasaas/database",
     "db:push": "npm run push --workspace=@agenciasaas/database",
     "db:migrate": "npm run migrate --workspace=@agenciasaas/database",
-    "db:seed": "npm run seed --workspace=@agenciasaas/database"
+    "db:seed": "npm run seed --workspace=@agenciasaas/database",
+    "postinstall": "npm run db:generate"
   },
   "devDependencies": {
     "@turbo/gen": "^1.12.4",
