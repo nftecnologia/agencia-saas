@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense } from "react"
-import { PageContainer } from "@/components/layout/page-container"
+import { MainLayout } from "@/components/layout/main-layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -15,7 +15,7 @@ import { Plus, TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-rea
 
 function FinanceiroPage() {
   return (
-    <PageContainer>
+    <MainLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Financeiro</h1>
@@ -188,7 +188,7 @@ function FinanceiroPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </PageContainer>
+    </MainLayout>
   )
 }
 
