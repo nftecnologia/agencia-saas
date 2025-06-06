@@ -1002,15 +1002,6 @@ export default function IAPage() {
           </div>
         )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 py-8">
-          {Object.entries(aiAgents).map(([category, agents]) => (
-            <Card key={category} className="text-center p-4">
-              <div className="text-2xl font-bold text-blue-600">{agents.length}</div>
-              <div className="text-sm text-gray-600 capitalize">{category}</div>
-            </Card>
-          ))}
-        </div>
 
         {/* Agent Modal */}
         <AgentModal
