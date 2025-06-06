@@ -491,13 +491,19 @@ function KanbanColumn({ column, projects, onDrop, onDragOver, onDragEnter, onDra
 }
 
 export default function KanbanPage() {
-  const [projects, setProjects] = useState(mockProjects)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedPriority, setSelectedPriority] = useState("")
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
   
-  // Buscar clientes reais
+  // Buscar dados reais
   const { data: clients, isLoading: clientsLoading } = useGetClients()
+  const { data: projects = [], isLoading: projectsLoading, error: projectsError } = useKanbanProjects()
+  const moveProjectMutation = useMoveProject()
+  const updateProjectMutation = useUpdateProject()
+  const deleteProjectMutation = useDeleteProject()
+  const createTaskMutation = useCreateTask()
+  const updateTaskMutation = useUpdateTask()
+  const deleteTaskMutation = useDeleteTask()
   
   // Estados para os modais
   const [viewModalOpen, setViewModalOpen] = useState(false)
@@ -538,13 +544,18 @@ export default function KanbanPage() {
     e.preventDefault()
     const projectId = e.dataTransfer.getData('text/plain')
     
-    setProjects(prev => 
-      prev.map(project => 
-        project.id === projectId 
-          ? { ...project, status: newStatus }
-          : project
-      )
-    )
+    // Mapear status do Kanban para status do banco
+    const statusMap: Record<string, "PLANNING" | "IN_PROGRESS" | "REVIEW" | "COMPLETED"> = {
+      planning: "PLANNING",
+      in_progress: "IN_PROGRESS", 
+      review: "REVIEW",
+      completed: "COMPLETED"
+    }
+    
+    moveProjectMutation.mutate({
+      projectId,
+      newStatus: statusMap[newStatus]
+    })
     
     setDragOverColumn(null)
   }
@@ -565,7 +576,7 @@ export default function KanbanPage() {
   const handleDeleteProject = (projectId: string) => {
     const project = projects.find(p => p.id === projectId)
     if (confirm(`🗑️ Tem certeza que deseja excluir o projeto "${project?.name}"?\n\nEsta ação não pode ser desfeita!`)) {
-      setProjects(prev => prev.filter(project => project.id !== projectId))
+      deleteProjectMutation.mutate({ projectId })
     }
   }
 
